@@ -8,14 +8,13 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   rename = require('gulp-rename'),
   babel = require('gulp-babel'),
+  jshint = require('gulp-jshint'),
+  changed = require('gulp-changed'),
+  concat = require('gulp-concat'),
   // cache =                 require('gulp-cache'),
-  // changed =               require('gulp-changed'),
-  // concat =                require('gulp-concat'),
   // filter =                require('gulp-filter'),
   // imagemin =              require('gulp-imagemin'),
   // inject =                require('gulp-inject'),
-  // jshint =                require('gulp-jshint'),
-  // mainBowerFiles =        require('main-bower-files'),
   // util =                  require('gulp-util'),
   // handlebars =            require('gulp-compile-handlebars'),
   // directoryMap =          require('gulp-directory-map'),
@@ -82,20 +81,22 @@ gulp.task('css', function () {
 });
 
 // JS
-// gulp.task('js', function () {
-//     return gulp.src( paths.js )
-//         .pipe( changed( dests.js ) )
-//         .pipe(babel({
-//             presets: ['env']
-//         }))
-//         .pipe( jshint( options.jshint ) )
-//         .pipe( jshint.reporter( options.jshint_reporter ) )
-//         .pipe( gulp.dest( dests.js ) )
-//         .pipe( uglify( options.uglify ) )
-//         .pipe( concat( 'all.min.js' ) )
-//         .pipe( gulp.dest( dests.js ) )
-//         .pipe( notify( { message: 'Scripts task complete.' } ) )
-// });
+gulp.task('js', function () {
+  return gulp.src(paths.js)
+    .pipe(changed(dests.js))
+    .pipe(babel({
+      presets: ['env']
+    }))
+    .pipe(jshint(options.jshint))
+    .pipe(jshint.reporter(options.jshint_reporter))
+    .pipe(gulp.dest(dests.js))
+    .pipe(uglify(options.uglify))
+    .pipe(concat('all.min.js'))
+    .pipe(gulp.dest(dests.js))
+    .pipe(notify({
+      message: 'Scripts task complete.'
+    }))
+});
 
 
 

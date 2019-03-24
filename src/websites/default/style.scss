@@ -1,16 +1,23 @@
+// Define variables that can override the framework ones
+@import "variable";
+
+////////  IMPORT THE WHOLE FRAMEWORK
 // To import the whole framework, uncomment the following and comment out all the bits following
 @import "../../framework/import";
 
+////////  IMPORT SOME PARTS ONLY
+// If you don't want to import the whole framework, you can uncomment some parts to include them :
+
 // add normalizer to standardize CSS in all browsers
-//@import "../../framework/common/normalize";
-// defile all the variables
-//@import "../../framework/common/variable";
-// override default variable with site specific ones
-  //@import "common/variable"
+//@import "../../framework/_common/normalize";
+
+// define all the variables
+//@import "../../framework/_common/variable";
+
 // import default mixins
-//@import "../../framework/common/mixin";
+//@import "../../framework/_common/mixin";
 
 // FRAMEWORK COMPONENTS
-//@import "../../framework/heading/style";
+//@import "../../framework/_heading/style";
 
 // COMPONENTS
