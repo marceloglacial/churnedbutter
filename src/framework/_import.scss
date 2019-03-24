@@ -1,12 +1,12 @@
 // import common files
-@import "./common/normalize";
-@import "./common/variable";
-@import "./common/mixin";
+@import "./_common/normalize";
+@import "./_common/variable";
+@import "./_common/mixin";
 
 // import framework components
-@import "./button/style";
-@import "./grid/style";
-@import "./heading/style";
+@import "./_button/style";
+@import "./_grid/style";
+@import "./_heading/style";
 
 // import butter components
 @import "./c-story/style";
