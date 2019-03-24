@@ -1,0 +1,44 @@
+{
+  "name": "churnedbutter",
+  "version": "1.0.0",
+  "description": "UI framework and styleguide for Postmedia websites",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andre-the-giant/churnedbutter.git"
+  },
+  "keywords": [
+    "user",
+    "interface",
+    "ui",
+    "butter",
+    "churned",
+    "styleguide",
+    "framework",
+    "SASS",
+    "CSS",
+    "SCSS"
+  ],
+  "author": "andre-the-giant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andre-the-giant/churnedbutter/issues"
+  },
+  "homepage": "https://github.com/andre-the-giant/churnedbutter#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2"
+  }
+}
