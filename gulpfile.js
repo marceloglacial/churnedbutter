@@ -70,7 +70,7 @@ gulp.task('css', function () {
   return gulp.src(paths.scss)
     .pipe(sass())
     .pipe(autoprefixer(options.autoprefix))
-    .pipe(gulp.dest(dests.css))
+    .pipe(gulp.dest(dest))
     .pipe(rename({
       suffix: '.min'
     }))
@@ -81,23 +81,23 @@ gulp.task('css', function () {
     }))
 });
 
-// JS
-gulp.task('js', function () {
-  return gulp.src(paths.js)
-    .pipe(changed(dests.js))
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(jshint(options.jshint))
-    .pipe(jshint.reporter(options.jshint_reporter))
-    .pipe(gulp.dest(dests.js))
-    .pipe(uglify(options.uglify))
-    .pipe(concat('all.min.js'))
-    .pipe(gulp.dest(dests.js))
-    .pipe(notify({
-      message: 'Scripts task complete.'
-    }))
-});
+// // JS
+// gulp.task('js', function () {
+//   return gulp.src(paths.js)
+//     .pipe(changed(dests.js))
+//     .pipe(babel({
+//       presets: ['env']
+//     }))
+//     .pipe(jshint(options.jshint))
+//     .pipe(jshint.reporter(options.jshint_reporter))
+//     .pipe(gulp.dest(dests.js))
+//     .pipe(uglify(options.uglify))
+//     .pipe(concat('all.min.js'))
+//     .pipe(gulp.dest(dests.js))
+//     .pipe(notify({
+//       message: 'Scripts task complete.'
+//     }))
+// });
 
 
 
