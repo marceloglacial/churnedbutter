@@ -24,6 +24,7 @@ var gulp = require('gulp'),
 
   // Define default  folders
   source = 'src/',
+  styleguide = 'styleguide/',
   dest = 'dist/',
   tmp = '.tmp/';
 
@@ -31,7 +32,7 @@ var gulp = require('gulp'),
 var paths = {
     scss: source + '**/*.scss',
     js: source + '**/*.js',
-    template: source + 'assets/portfolio_generator/portfolio_home.handlebars'
+    template: styleguide + 'templates/*'
   },
   dests = {
     css: dest + 'css/',
