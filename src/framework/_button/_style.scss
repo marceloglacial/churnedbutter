@@ -1,0 +1,28 @@
+.btn {
+    display: inline-flex;
+    box-shadow: none;
+    justify-content: flex-start;
+    appearance: none;
+    align-items: center;
+    border: 1px solid $brand-color;
+    border-radius: 4px;
+    outline: none;
+    padding: 0.5rem;
+    color: $brand-color;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &--xs {
+        font-size: 60%;
+    }
+
+    &--sm {
+        font-size: 80%;
+    }
+
+    &--xl {
+        font-size: 150%;
+    }
+}

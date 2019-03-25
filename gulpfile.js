@@ -65,7 +65,7 @@ gulp.task('clean', function () {
 });
 
 // CSS
-gulp.task('css', function () {
+function css() {
   return gulp.src(paths.scss)
     .pipe(sass())
     .pipe(autoprefixer(options.autoprefix))
@@ -78,7 +78,8 @@ gulp.task('css', function () {
     .pipe(notify({
       message: 'CSS task complete.'
     }))
-});
+};
+exports.css = css;
 
 // JS
 gulp.task('js', function () {
@@ -220,14 +221,14 @@ gulp.task('js', function () {
 // });
 
 // Watch
-// gulp.task('watch', function () {
-//     gulp.watch( paths.scss, ['css'] );
-//     gulp.watch( paths.js, ['js'] );
-//     //gulp.watch( paths.js, ['deps'] );
-//     //  gulp.watch( paths.php, ['phpunit'] );
-//     gulp.watch( paths.php, ['php'] );
-//     gulp.watch( paths.images, ['images'] );
-// });
+gulp.task('watch', function () {
+    gulp.watch( paths.scss, css );
+    // gulp.watch( paths.js, ['js'] );
+    //gulp.watch( paths.js, ['deps'] );
+    //  gulp.watch( paths.php, ['phpunit'] );
+    // gulp.watch( paths.php, ['php'] );
+    // gulp.watch( paths.images, ['images'] );
+});
 
 
 //
