@@ -75,7 +75,7 @@ gulp.task('css', function () {
       suffix: '.min'
     }))
     .pipe(minifycss())
-    .pipe(gulp.dest(dests.css))
+    .pipe(gulp.dest(dest))
     .pipe(notify({
       message: 'CSS task complete.'
     }))
