@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Styleguide</title>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        {{#each pageList}}
+          <li><button class="btn btn-sm btn-primary" data-filter=".{{this.url}}">{{this.name}}</button></li>
+          {{/each}}
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>Styleguide home</h1>
+
+    <p>This is the homepage</p>
+
+    {{#if before}}{{#if after}}
+    <img src="{{before}}" alt=""><img src="{{after}}" alt="">
+    {{/if}}{{/if}}
+
+  </main>
+  <footer>
+    &copy; Postmedia Network
+  </footer>
+</body>
+</html>
