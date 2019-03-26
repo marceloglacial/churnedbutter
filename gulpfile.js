@@ -70,7 +70,7 @@ gulp.task('css', function () {
   return gulp.src(paths.scss)
     .pipe(sass())
     .pipe(autoprefixer(options.autoprefix))
-    .pipe(gulp.dest(dest))
+    .pipe(gulp.dest(dests.css))
     .pipe(rename({
       suffix: '.min'
     }))
