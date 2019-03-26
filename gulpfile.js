@@ -24,6 +24,7 @@ var gulp = require('gulp'),
 
   // Define default  folders
   source = 'src/',
+  styleguide = 'styleguide/',
   dest = 'dist/',
   tmp = '.tmp/';
 
@@ -31,7 +32,7 @@ var gulp = require('gulp'),
 var paths = {
     scss: source + '**/*.scss',
     js: source + '**/*.js',
-    template: source + 'assets/portfolio_generator/portfolio_home.handlebars'
+    template: styleguide + 'templates/*'
   },
   dests = {
     css: dest + 'css/',
@@ -74,29 +75,29 @@ gulp.task('css', function () {
       suffix: '.min'
     }))
     .pipe(minifycss())
-    .pipe(gulp.dest(dests.css))
+    .pipe(gulp.dest(dest))
     .pipe(notify({
       message: 'CSS task complete.'
     }))
 });
 
-// JS
-gulp.task('js', function () {
-  return gulp.src(paths.js)
-    .pipe(changed(dests.js))
-    .pipe(babel({
-      presets: ['env']
-    }))
-    .pipe(jshint(options.jshint))
-    .pipe(jshint.reporter(options.jshint_reporter))
-    .pipe(gulp.dest(dests.js))
-    .pipe(uglify(options.uglify))
-    .pipe(concat('all.min.js'))
-    .pipe(gulp.dest(dests.js))
-    .pipe(notify({
-      message: 'Scripts task complete.'
-    }))
-});
+// // JS
+// gulp.task('js', function () {
+//   return gulp.src(paths.js)
+//     .pipe(changed(dests.js))
+//     .pipe(babel({
+//       presets: ['env']
+//     }))
+//     .pipe(jshint(options.jshint))
+//     .pipe(jshint.reporter(options.jshint_reporter))
+//     .pipe(gulp.dest(dests.js))
+//     .pipe(uglify(options.uglify))
+//     .pipe(concat('all.min.js'))
+//     .pipe(gulp.dest(dests.js))
+//     .pipe(notify({
+//       message: 'Scripts task complete.'
+//     }))
+// });
 
 
 
