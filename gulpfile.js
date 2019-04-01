@@ -11,6 +11,7 @@ var gulp = require('gulp'),
   jshint = require('gulp-jshint'),
   changed = require('gulp-changed'),
   concat = require('gulp-concat'),
+  browserSync = require('browser-sync'),
   // cache =                 require('gulp-cache'),
   // filter =                require('gulp-filter'),
   // imagemin =              require('gulp-imagemin'),
@@ -23,8 +24,8 @@ var gulp = require('gulp'),
   // promise =               require("gulp-stream-to-promise"),
 
   // Define default  folders
-  source = 'src/',
-  dest = 'dist/',
+  source = './src',
+  dest = './dist/',
   tmp = '.tmp/';
 
 // Config
@@ -245,3 +246,21 @@ gulp.task('watch', function () {
 //     'watch'
 //   );
 // });
+
+
+// Develop Tasks
+function devReload() {
+  browserSync.reload();
+};
+
+function devWatch() {
+  browserSync.init({
+      server: {
+          baseDir: source
+      }
+  });
+  gulp.watch(paths.scss + '**/*.*', css).on('change', devReload);
+  gulp.watch(source + '**/*.*').on('change', devReload);
+};
+gulp.task('develop', devWatch);
+
