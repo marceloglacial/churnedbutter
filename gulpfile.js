@@ -3,6 +3,7 @@ const gulp = require('gulp'),
     del = require('del'),
     browserSync = require('browser-sync').create(),
     sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
     handlebars = require('gulp-compile-handlebars'),
     rename = require('gulp-rename');
@@ -35,6 +36,7 @@ const styleguide = new function () {
 function styles() {
     return gulp
         .src(source.sass)
+        .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
         }))
@@ -42,6 +44,7 @@ function styles() {
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
         }))
+        .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest(source.dist))
         .pipe(browserSync.stream());
 };
