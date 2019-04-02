@@ -3,21 +3,35 @@ const gulp = require('gulp'),
     del = require('del'),
     browserSync = require('browser-sync').create(),
     sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer');
+    autoprefixer = require('gulp-autoprefixer'),
+    handlebars = require('gulp-compile-handlebars'),
+    rename = require('gulp-rename');
 
 // Paths
+const src = './src/';
+const dist = './dist/';
+const all = '**/*.*';
+
 const source = new function () {
-    this.root = './src/';
-    this.all = this.root + '**/*.*';
-    this.dist = './dist/';
+    this.root = src;
+    this.all = this.root + all;
+    this.dist = dist;
     this.sass = this.root + '**/*.scss';
 };
+const styleguide = new function () {
+    this.root = './styleguide/';
+    this.dist = dist;
+    this.all = this.root + all;
+    this.templates = this.root + 'templates/';
+    this.partials = this.templates + 'partials/';
+};
+
 
 // ===================================================
 // 1. Source
 // ===================================================
 
-// 1.1 - Minify CSS with SASS
+// 1.1 - Compile SASS and minify CSS
 function styles() {
     return gulp
         .src(source.sass)
@@ -33,33 +47,57 @@ function styles() {
 };
 exports.styles = styles
 
-// 1.5 - Live Server
-function sourceReload() {
+// ===================================================
+// 2. Styleguide
+// ===================================================
+
+function templates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [styleguide.partials]
+        }
+    return gulp.src(styleguide.templates + '*.handlebars')
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(styleguide.dist))
+        .pipe(browserSync.stream());
+};
+exports.templates = templates;
+
+
+// ===================================================
+// **. Live Server
+// ===================================================
+function liveReload() {
     browserSync.reload();
 };
 
-function sourceWatch() {
+function liveServer() {
     browserSync.init({
         server: {
-            baseDir: source.root
+            baseDir: dist
         }
     });
     gulp.watch(source.sass).on('change', styles);
-    gulp.watch(source.all).on('change', sourceReload);
+    gulp.watch(styleguide.all).on('change', templates);
+    gulp.watch(source.all).on('change', liveReload);
 };
 
-// 1.6 - Build
+// ===================================================
+// **. Build
+// ===================================================
+
 function clean(path = source.dist) {
     return del(path);
 };
-
 const cleanDist = gulp.series(() => clean());
-const sourceBuild = gulp.series(() => clean(), styles);
 
 
 // ===================================================
-// 9. Gulp Tasks
+// **. Gulp Main Tasks
 // ===================================================
 gulp.task('clean', cleanDist);
-gulp.task('develop', sourceWatch);
-gulp.task('build', sourceBuild);
+gulp.task('develop', liveServer);
