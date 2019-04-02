@@ -3,22 +3,14 @@ const gulp = require('gulp'),
     del = require('del'),
     browserSync = require('browser-sync').create(),
     sass = require('gulp-sass'),
-    autoprefixer = require('gulp-autoprefixer'),
-    handlebars = require('gulp-compile-handlebars'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
-    htmlmin = require('gulp-htmlmin');
+    autoprefixer = require('gulp-autoprefixer');
 
 // Paths
 const source = new function () {
     this.root = './src/';
     this.all = this.root + '**/*.*';
     this.dist = './dist/';
-    this.css = this.root + 'assets/css/';
     this.sass = this.root + '**/*.scss';
-    this.js = this.root + 'assets/js/**/*.js';
-    this.images = this.root + 'assets/img/**/*.*';
 };
 
 // ===================================================
@@ -60,12 +52,14 @@ function sourceWatch() {
 function clean(path = source.dist) {
     return del(path);
 };
+
+const cleanDist = gulp.series(() => clean());
 const sourceBuild = gulp.series(() => clean(), styles);
 
 
 // ===================================================
 // 9. Gulp Tasks
 // ===================================================
-
+gulp.task('clean', cleanDist);
 gulp.task('develop', sourceWatch);
 gulp.task('build', sourceBuild);
