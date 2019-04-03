@@ -1,4 +1,8 @@
-// Gulp modules
+// ===================================================
+// 1. Setup
+// ===================================================
+
+// 1.1 - Gulp modules
 const gulp = require('gulp'),
     del = require('del'),
     browserSync = require('browser-sync').create(),
@@ -8,7 +12,7 @@ const gulp = require('gulp'),
     handlebars = require('gulp-compile-handlebars'),
     rename = require('gulp-rename');
 
-// Paths
+// 1.2 - Project Paths
 const src = './src/';
 const dist = './dist/';
 const all = '**/*.*';
@@ -29,10 +33,10 @@ const styleguide = new function () {
 
 
 // ===================================================
-// 1. Source
+// 2. Source
 // ===================================================
 
-// 1.1 - Compile SASS and minify CSS
+// 2.1 - Compile SASS and minify CSS
 function styles() {
     return gulp
         .src(source.sass)
@@ -51,9 +55,10 @@ function styles() {
 exports.styles = styles
 
 // ===================================================
-// 2. Styleguide
+// 3. Styleguide
 // ===================================================
 
+// 3.1 - Generate HTML from Handlebars templates
 function templates() {
     var templateData = {},
         options = {
@@ -72,12 +77,15 @@ exports.templates = templates;
 
 
 // ===================================================
-// **. Live Server
+// 4. Live Server
 // ===================================================
+
+// 4.1 - Reload page
 function liveReload() {
     browserSync.reload();
 };
 
+// 4.2 - Start server and watch files
 function liveServer() {
     browserSync.init({
         server: {
@@ -90,9 +98,10 @@ function liveServer() {
 };
 
 // ===================================================
-// **. Build
+// 5. Build
 // ===================================================
 
+// 5.1 - Clean build folder 
 function clean(path = source.dist) {
     return del(path);
 };
@@ -101,9 +110,17 @@ const build = gulp.series(cleanDist, templates, styles);
 
 
 // ===================================================
-// **. Gulp Main Tasks
+// 6. Gulp Main Tasks
 // ===================================================
-gulp.task('clean', cleanDist);
+
+// 6.1 - Clean dist folder
+gulp.task('clean', cleanDist); 
+
+// 6.2 - First build and start server
 gulp.task('develop', gulp.series(build, liveServer));
+
+// 6.3 - Build project 
 gulp.task('build', build);
+
+// 6.4 - Default task
 gulp.task('default', gulp.series('develop'));
