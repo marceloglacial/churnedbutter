@@ -106,3 +106,4 @@ const build = gulp.series(cleanDist, templates, styles);
 gulp.task('clean', cleanDist);
 gulp.task('develop', gulp.series(build, liveServer));
 gulp.task('build', build);
+gulp.task('default', gulp.series('develop'));
