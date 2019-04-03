@@ -11,6 +11,8 @@
 
     &:hover {
         cursor: pointer;
+        background: $mid-grey;
+        color: #FFF;
     }
 
     &--xs {
@@ -22,7 +24,7 @@
     }
 
     &--xl {
-        font-size: 150%;
+        font-size: 200%;
     }
 }
 

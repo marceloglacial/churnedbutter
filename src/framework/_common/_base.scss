@@ -8,6 +8,7 @@
 html {
   box-sizing: border-box;
   padding: 20px;
+  font-family: $text-font-stack;
 }
 
 /**
@@ -26,5 +27,12 @@ html {
  * Basic styles for links
  */
 a {
+  color: $brand-color;
   text-decoration: none;
+}
+pre { // TODO - add variables
+  padding: 1rem 2rem;
+  background: #f9f9f9;
+  border: solid 1px #f1f1f1;
+  border-radius: 5px;
 }

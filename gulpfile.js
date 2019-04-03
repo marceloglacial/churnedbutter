@@ -97,10 +97,12 @@ function clean(path = source.dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
+const build = gulp.series(cleanDist, templates, styles);
 
 
 // ===================================================
 // **. Gulp Main Tasks
 // ===================================================
 gulp.task('clean', cleanDist);
-gulp.task('develop', liveServer);
+gulp.task('develop', gulp.series(build, liveServer));
+gulp.task('build', build);
