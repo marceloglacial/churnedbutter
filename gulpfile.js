@@ -32,7 +32,7 @@ const styleguide = new function () {
     this.all = this.root + all;
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
-    this.js = this.root + 'js/**.js';
+    this.js = this.root + 'js/';
 };
 
 
@@ -63,14 +63,14 @@ exports.styles = styles
 function scripts() {
     return (
         gulp
-            .src(source.js, {
-                sourcemaps: true
-            })
-            .pipe(babel({
-                presets: ['@babel/env']
-            }))
-            .pipe(uglify())
-            .pipe(gulp.dest(source.dist))
+        .src(source.js, {
+            sourcemaps: true
+        })
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest(source.dist))
     );
 }
 exports.scripts = scripts
@@ -80,8 +80,18 @@ exports.scripts = scripts
 // 3. Styleguide
 // ===================================================
 
+// 3.1 - Copy Scripts to dist 
+function styleguideJsToDist() {
+    return gulp.src(styleguide.js + all) 
+        .pipe(gulp.dest(styleguide.dist + 'assets/js/'))
+}
+exports.styleguideJsToDist = styleguideJsToDist
+
 // 3.1 - Generate HTML from Handlebars templates
 function templates() {
+
+    styleguideJsToDist();
+
     var templateData = {},
         options = {
             ignorePartials: true,
@@ -93,8 +103,6 @@ function templates() {
             path.extname = '.html';
         }))
         .pipe(gulp.dest(styleguide.dist))
-        .pipe(gulp.src(styleguide.js))
-        .pipe(gulp.dest(styleguide.dist + 'js/'))
         .pipe(browserSync.stream());
 };
 exports.templates = templates;
@@ -138,7 +146,7 @@ const build = gulp.series(cleanDist, templates, styles);
 // ===================================================
 
 // 6.1 - Clean dist folder
-gulp.task('clean', cleanDist); 
+gulp.task('clean', cleanDist);
 
 // 6.2 - First build and start server
 gulp.task('develop', gulp.series(build, liveServer));
