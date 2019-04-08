@@ -82,12 +82,12 @@ exports.scripts = scripts
 
 // 3.1 - Copy Scripts to dist 
 function styleguideJsToDist() {
-    return gulp.src(styleguide.js + all) 
+    return gulp.src(styleguide.js + all)
         .pipe(gulp.dest(styleguide.dist + 'assets/js/'))
 }
 exports.styleguideJsToDist = styleguideJsToDist
 
-// 3.1 - Generate HTML from Handlebars templates
+// 3.2 - Generate HTML from Handlebars templates
 function templates() {
 
     styleguideJsToDist();
@@ -124,9 +124,8 @@ function liveServer() {
             baseDir: dist
         }
     });
-    gulp.watch(source.sass).on('change', styles);
-    gulp.watch(styleguide.all).on('change', templates);
-    gulp.watch(source.all).on('change', liveReload);
+    gulp.watch(styleguide.all).on('change', gulp.series(build, liveReload));
+    gulp.watch(source.all).on('change',  gulp.series(build, liveReload));
 };
 
 // ===================================================
