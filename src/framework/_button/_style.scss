@@ -1,3 +1,6 @@
+// ===============
+// Button 
+// =============== 
 .btn {
     display: inline-flex;
     box-shadow: none;
@@ -13,8 +16,8 @@
 
     &:hover {
         cursor: pointer;
-        background: $mid-grey;
-        color: #FFF;
+        background: black;
+        color: $white;
     }
 
     &--xs {
@@ -28,5 +31,15 @@
     &--xl {
         font-size: 200%;
     }
+    a {
+        color: $white;
+    }
 }
 
+// ===============
+// Button List
+// =============== 
+
+.btnList {
+    padding: 0;
+}
