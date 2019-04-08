@@ -3,15 +3,13 @@
     Postmedia Inc.
 </footer>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-<!-- Code Prettify: https://github.com/google/code-prettify -->
 <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
 <script>
-    let container = $('.template code');
-    let htmlString = container.html()
-    container.addClass('prettyprint html');
-    container.text(htmlString)
+    $('code').each(function () {
+        let htmlString = $(this).html()
+        $(this).addClass('prettyprint html');
+        $(this).text(htmlString)
+    });
 </script>
-
 </body>
 </html>

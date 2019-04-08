@@ -9,6 +9,8 @@ const gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
+    uglify = require('gulp-uglify'),
+    babel = require('gulp-babel'),
     handlebars = require('gulp-compile-handlebars'),
     rename = require('gulp-rename');
 
@@ -22,6 +24,7 @@ const source = new function () {
     this.all = this.root + all;
     this.dist = dist;
     this.sass = this.root + '**/*.scss';
+    this.js = this.root + '**/*.js';
 };
 const styleguide = new function () {
     this.root = './styleguide/';
@@ -53,6 +56,24 @@ function styles() {
         .pipe(browserSync.stream());
 };
 exports.styles = styles
+
+// 2.2  - Minify JS 
+// Minify JavaScript
+function scripts() {
+    return (
+        gulp
+            .src(source.js, {
+                sourcemaps: true
+            })
+            .pipe(babel({
+                presets: ['@babel/env']
+            }))
+            .pipe(uglify())
+            .pipe(gulp.dest(source.dist))
+    );
+}
+exports.scripts = scripts
+
 
 // ===================================================
 // 3. Styleguide
