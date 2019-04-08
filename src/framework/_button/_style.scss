@@ -7,7 +7,6 @@
     justify-content: flex-start;
     appearance: none;
     align-items: center;
-    border: 1px solid $mid-grey;
     border-radius: 5px;
     outline: none;
     padding: 0.7rem;
@@ -16,20 +15,20 @@
 
     &:hover {
         cursor: pointer;
-        background: black;
+        background:$black;
         color: $white;
     }
 
     &--xs {
-        font-size: 70%;
+        font-size: $size-8;
     }
 
     &--sm {
-        font-size: 80%;
+        font-size: $size-7;
     }
 
     &--xl {
-        font-size: 200%;
+        font-size: $size-4;
     }
     a {
         color: $white;
