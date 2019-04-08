@@ -44,7 +44,7 @@ const styleguide = new function () {
 function styles() {
     return gulp
         .src(source.sass)
-        .pipe(sourcemaps.init())
+        // .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
         }))
@@ -52,7 +52,7 @@ function styles() {
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
         }))
-        .pipe(sourcemaps.write('./maps'))
+        // .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest(source.dist))
         .pipe(browserSync.stream());
 };

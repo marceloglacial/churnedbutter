@@ -1,1 +1,18 @@
-// test
+.s-story {
+    padding: 1rem 0;
+    
+    .c-story {
+        &__title {
+            color: $dark-grey;
+            padding: 0;
+            margin: 0;
+            font-size: $size-3;
+        }
+
+        &__intro {
+            color: $black;
+            line-height: 1.5rem;
+            color: $dark-grey;
+        }
+    }
+}
