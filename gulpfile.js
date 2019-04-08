@@ -32,6 +32,7 @@ const styleguide = new function () {
     this.all = this.root + all;
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
+    this.js = this.root + 'js/**.js';
 };
 
 
@@ -92,6 +93,8 @@ function templates() {
             path.extname = '.html';
         }))
         .pipe(gulp.dest(styleguide.dist))
+        .pipe(gulp.src(styleguide.js))
+        .pipe(gulp.dest(styleguide.dist + 'js/'))
         .pipe(browserSync.stream());
 };
 exports.templates = templates;
