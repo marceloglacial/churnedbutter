@@ -1,8 +1,35 @@
-<nav>
-    <ul class="btnList">
-        <li class="btn btn--sm"><a href="layout.html">Layout</a></li>
-        <li class="btn btn--sm"><a href="elements.html">Elements</a></li>
-        <li class="btn btn--sm"><a href="components.html">Components</a></li>
-        <li class="btn btn--sm"><a href="helpers.html">Helpers</a></li>
-    </ul>
+<nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="index.html">
+                <img src="assets/img/logo-inverted.png" alt="Postmedia Logo">
+            </a>
+
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="index.html">UI Framework</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Components</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="components-nav.html">Navigation Bar</a>
+                        <a class="navbar-item" href="components-story.html">Story Page</a>
+                        <a class="navbar-item" href="components-story-header.html">-- Story Header</a>
+                        <a class="navbar-item" href="components-story-content.html">-- Story Content</a>
+                        <a class="navbar-item" href="components-story-related-stories.html">-- Related Stories</a>
+                        <a class="navbar-item" href="components-story-social-bar.html">-- Social Bar</a>
+                        <a class="navbar-item" href="components-story-top-stories.html">-- Top Stories</a>
+                        <a class="navbar-item" href="components-footer.html">Footer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </nav>

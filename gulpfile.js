@@ -12,6 +12,7 @@ const gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     babel = require('gulp-babel'),
     handlebars = require('gulp-compile-handlebars'),
+    imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename');
 
 // 1.2 - Project Paths
@@ -33,6 +34,7 @@ const styleguide = new function () {
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
     this.js = this.root + 'js/';
+    this.img = this.root + 'img/';
 };
 
 
@@ -74,6 +76,17 @@ function scripts() {
     );
 }
 exports.scripts = scripts
+
+// / 2.3 - Minify Images
+function images() {
+    return (
+        gulp
+        .src(styleguide.img + '/**/*.*')
+        .pipe(imagemin())
+        .pipe(gulp.dest(source.dist + 'assets/img/'))
+    )
+};
+exports.images = images
 
 
 // ===================================================
@@ -137,7 +150,7 @@ function clean(path = source.dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
-const build = gulp.series(cleanDist, templates, styles);
+const build = gulp.series(cleanDist, templates, styles, images);
 
 
 // ===================================================

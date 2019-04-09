@@ -1,13 +1,10 @@
-// import common files
-@import "./_common/normalize";
-@import "./_common/variable";
-@import "./_common/base";
-@import "./_common/mixin";
-
-// import framework components
-@import "./_button/style";
-@import "./_grid/style";
-@import "./_heading/style";
+/*! bulma.io v0.7.4 | MIT License | github.com/jgthms/bulma */
+@import "utilities/_all";
+@import "base/_all";
+@import "elements/_all";
+@import "components/_all";
+@import "grid/_all";
+@import "layout/_all";
 
 // import butter components
 @import "./c-story/style";

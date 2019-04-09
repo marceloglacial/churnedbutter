@@ -1,0 +1,49 @@
+{{> header }}
+
+<section class="section">
+    <div class="container">
+        <nav class="breadcrumb is-medium" aria-label="breadcrumbs">
+            <ul>
+                <li><a href="components.html">Components</a></li>
+                <li class="is-active"><a href="#" aria-current="page">Navigation Bar</a></li>
+            </ul>
+        </nav>
+        <div class="box">Description</div>
+        <h3 class="title is-size-5">Code Template</h3>
+
+<pre><code><nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="path/to/home">
+                <img src="path/to/logo" alt="Logo">
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" href="path/to/home">Home</a>
+                <a class="navbar-item" href="path/to/item">Menu Item</a>
+                <a class="navbar-item" href="path/to/item">Menu Item</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Menu Dropdown</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" href="path/to/item">Menu Item</a>
+                        <a class="navbar-item" href="path/to/item">Menu Item</a>
+                        <a class="navbar-item" href="path/to/item">Menu Item</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</code></pre>
+
+    </div>
+</section>
+
+{{> footer }}

@@ -3,7 +3,6 @@
     
     .c-story {
         &__title {
-            color: $dark-grey;
             padding: 0;
             margin: 0;
             font-size: $size-3;
@@ -11,7 +10,6 @@
 
         &__intro {
             line-height: 1.5rem;
-            color: $dark-grey;
         }
     }
 }
