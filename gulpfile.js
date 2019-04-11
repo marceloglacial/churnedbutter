@@ -20,13 +20,18 @@ const src = './src/';
 const dist = './dist/';
 const all = '**/*.*';
 
-const source = new function () {
-    this.root = src;
-    this.all = this.root + all;
-    this.dist = dist;
-    this.sass = this.root + '**/*.scss';
-    this.js = this.root + '**/*.js';
-};
+const app = new function() {
+    this. all = src + all;
+    this.dirname = 'websites/';
+    this.root = src + this.dirname;
+    this.styles = this.root + 'styles/**/*.scss';
+    this.scripts = this.root + 'assets/js/**/*.js';
+    this.images = this.root + 'assets/img/**/*.*';
+    this.templates = this.root + 'templates/';
+    this.partials = this.templates + 'partials/';
+    this.dist = dist + this.dirname;
+}
+
 const styleguide = new function () {
     this.root = './styleguide/';
     this.dist = dist;
@@ -39,14 +44,14 @@ const styleguide = new function () {
 
 
 // ===================================================
-// 2. Source
+// 2. App - Websites
 // ===================================================
 
 // 2.1 - Compile SASS and minify CSS
 function styles() {
     return gulp
-        .src(source.sass)
-        // .pipe(sourcemaps.init())
+        .src(app.styles)
+        .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
         }))
@@ -54,25 +59,24 @@ function styles() {
         .pipe(autoprefixer({
             browsers: ['last 2 versions'],
         }))
-        // .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(source.dist))
-        .pipe(browserSync.stream());
+        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulp.dest(app.dist + 'assets/css'))
+        // .pipe(browserSync.stream());
 };
 exports.styles = styles
 
 // 2.2  - Minify JS 
-// Minify JavaScript
 function scripts() {
     return (
         gulp
-        .src(source.js, {
+        .src(app.scripts, {
             sourcemaps: true
         })
         .pipe(babel({
             presets: ['@babel/env']
         }))
         .pipe(uglify())
-        .pipe(gulp.dest(source.dist))
+        .pipe(gulp.dest(app.dist + 'assets/js'))
     );
 }
 exports.scripts = scripts
@@ -81,42 +85,27 @@ exports.scripts = scripts
 function images() {
     return (
         gulp
-        .src(styleguide.img + '/**/*.*')
+        .src(app.images)
         .pipe(imagemin())
-        .pipe(gulp.dest(source.dist + 'assets/img/'))
+        .pipe(gulp.dest(app.dist + 'assets/img'))
     )
 };
 exports.images = images
 
-
-// ===================================================
-// 3. Styleguide
-// ===================================================
-
-// 3.1 - Copy Scripts to dist 
-function styleguideJsToDist() {
-    return gulp.src(styleguide.js + all)
-        .pipe(gulp.dest(styleguide.dist + 'assets/js/'))
-}
-exports.styleguideJsToDist = styleguideJsToDist
-
-// 3.2 - Generate HTML from Handlebars templates
+// 2.4 - Generate HTML from Handlebars templates
 function templates() {
-
-    styleguideJsToDist();
-
     var templateData = {},
         options = {
             ignorePartials: true,
-            batch: [styleguide.partials]
+            batch: [app.partials]
         }
-    return gulp.src(styleguide.templates + '*.handlebars')
+    return gulp.src(app.templates + '*.hbs')
         .pipe(handlebars(templateData, options))
         .pipe(rename(function (path) {
             path.extname = '.html';
         }))
-        .pipe(gulp.dest(styleguide.dist))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(app.dist))
+        // .pipe(browserSync.stream());
 };
 exports.templates = templates;
 
@@ -134,11 +123,10 @@ function liveReload() {
 function liveServer() {
     browserSync.init({
         server: {
-            baseDir: dist
+            baseDir: dist + 'websites'
         }
     });
-    gulp.watch(styleguide.all).on('change', gulp.series(build, liveReload));
-    gulp.watch(source.all).on('change',  gulp.series(build, liveReload));
+    gulp.watch(app.all).on('change',  gulp.series(build, liveReload));
 };
 
 // ===================================================
@@ -146,11 +134,11 @@ function liveServer() {
 // ===================================================
 
 // 5.1 - Clean build folder 
-function clean(path = source.dist) {
+function clean(path = dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
-const build = gulp.series(cleanDist, templates, styles, images);
+const build = gulp.series(cleanDist, templates, styles, scripts, images);
 
 
 // ===================================================

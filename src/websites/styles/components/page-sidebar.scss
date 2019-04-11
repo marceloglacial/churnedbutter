@@ -1,0 +1,68 @@
+// Import
+@import '../base/variables';
+@import '../util/all';
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    @include full-size;
+    background: $color-initial;
+    padding: 0 16px;
+    transform: translateX(-150%);
+    transition: all .3s ease-in-out;
+
+    &.open {
+        transform: translateX(0%);
+    }
+
+    // Close Button
+    & &-close {
+        @include flex-centered;
+        @include no-space;
+        background: none;
+        border: none;
+        width: $nav-button-size;
+        height: $nav-button-size;
+        background: url($page-header-nav-button-close) no-repeat left 15px;
+    }
+
+    // Navigation Menu
+    & &-section {
+        columns: 2 .5vw;
+        column-span: all;
+        font-weight: $weight-bold;
+        margin-bottom: 32px;
+    }
+
+    & &-item {
+        a {
+            display: inline-block;
+            @include full-size;
+            padding: 5px 16px;
+            color: $nav-link-color;
+
+            &:hover {
+                text-decoration: $nav-link-decoration;
+            }
+        }
+    }
+
+    & &-external {
+        a {
+            color: $color-secondary;
+
+            &:hover {
+                text-decoration: $nav-link-decoration;
+            }
+        }
+    }
+
+    & &-title {
+        column-span: all;
+        color: $color-primary;
+        font-weight: $weight-bold;
+        font-size: $size-3;
+        padding-left: 16px;
+    }
+}

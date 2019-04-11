@@ -1,0 +1,78 @@
+
+// Typography
+// ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+// Fonts
+$font-sans-serif: 'Helvetica', 'Arial', sans-serif;
+$font-primary: $font-sans-serif;
+
+// Sizes
+$size-1: 3rem !default;
+$size-2: 2.5rem !default;
+$size-3: 2rem !default;
+$size-4: 1.5rem !default;
+$size-5: 1.25rem !default;
+$size-6: 1rem !default;
+$size-7: 0.75rem !default;
+
+// Text Weight 
+$weight-light: 300 !default;
+$weight-normal: 400 !default;
+$weight-medium: 500 !default;
+$weight-semibold: 600 !default;
+$weight-bold: 700 !default;
+
+//  Tags
+b,
+strong {
+	font-weight: bold;
+}
+
+p {
+	margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: $weight-light;
+	letter-spacing: -.1rem;
+	margin-bottom: 2.0rem;
+	margin-top: 0;
+}
+
+h1 {
+	font-size: $size-1;
+	line-height: 1.2;
+}
+
+h2 {
+	font-size: $size-2;
+	line-height: 1.25;
+}
+
+h3 {
+	font-size: $size-3;
+	line-height: 1.3;
+}
+
+h4 {
+	font-size: $size-4;
+	letter-spacing: -.08rem;
+	line-height: 1.35;
+}
+
+h5 {
+	font-size: $size-5;
+	letter-spacing: -.05rem;
+	line-height: 1.5;
+}
+
+h6 {
+	font-size: $size-6;
+	letter-spacing: 0;
+	line-height: 1.4;
+}

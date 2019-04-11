@@ -1,0 +1,29 @@
+@import './color';
+@import './typography';
+
+// ========================================================
+// Base
+// ========================================================
+
+// Colors
+$color-initial: $white !default;
+$color-primary: $black !default;
+$color-secondary: $red-dark !default;
+$color-tertiary: $grey-lighter !default;
+$color-quaternary: $grey-light !default;
+$color-quinary: $grey !default;
+
+// ========================================================
+// Components
+// ========================================================
+
+// Page Header
+$header-height: 48px !default;
+$nav-button-size: $header-height !default;
+$page-header-nav-button: '/assets/img/icon-menu.svg' !default;
+$page-header-nav-button-close: '/assets/img/icon-close.svg' !default;
+
+
+// Sidebar
+$nav-link-color: $color-primary; 
+$nav-link-decoration: underline;
