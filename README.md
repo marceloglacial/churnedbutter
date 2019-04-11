@@ -13,11 +13,19 @@ It is built with NPM and us using Gulp packet manager to manage dependencies and
 2. Install Gulp globally `npm install gulp-cli --global`
 3. cd to the root and run `npm install`
 
-## How to start
-1. cd to the root and run `npm run develop` to work on the SASS framework.
-1. cd to the root and run `npm run start` to start Dev server and Styleguide page.
+### Run Development Servers
 
-## Clean dev builds
+```terminal
+    npm run start
+```
+### Run SASS Development
+
+```terminal
+    npm run develop
+```
+
+
+### Clean dev builds
 
 ```terminal
     gulp clean
