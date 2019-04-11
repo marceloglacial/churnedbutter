@@ -48,7 +48,7 @@ function styles() {
             browsers: ['last 3 versions'],
         }))
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(src.dist))
+        .pipe(gulp.dest(src.dist + 'css/'))
     // .pipe(browserSync.stream());
 };
 exports.styles = styles
@@ -77,6 +77,13 @@ function fonts() {
         .pipe(gulp.dest(src.fontsDist))
 };
 exports.fonts = fonts;
+
+// 2.3 - Assets
+function assets() {
+    return gulp.src('./websites/assets/**/*.*')
+        .pipe(gulp.dest(dist + '/assets/'))
+};
+exports.assets = assets;
 
 
 // ===================================================
@@ -123,7 +130,7 @@ function liveReload() {
 function liveServer() {
     browserSync.init({
         server: {
-            baseDir: dist + 'websites'
+            baseDir: dist
         }
     });
     gulp.watch(src.all).on('change', gulp.series(build, liveReload));
@@ -138,7 +145,7 @@ function clean(path = dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
-const build = gulp.series(cleanDist, templates, styles, scripts, images, fonts);
+const build = gulp.series(cleanDist, templates, styles, fonts, assets);
 
 
 // ===================================================
