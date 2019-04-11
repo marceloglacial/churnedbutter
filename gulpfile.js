@@ -1,247 +1,216 @@
-// Required Plugins
-var gulp = require('gulp'),
-  clean = require('gulp-clean'),
-  notify = require('gulp-notify'),
-  sass = require('gulp-sass'),
-  autoprefixer = require('gulp-autoprefixer'),
-  minifycss = require('gulp-clean-css'),
-  uglify = require('gulp-uglify'),
-  rename = require('gulp-rename'),
-  babel = require('gulp-babel'),
-  jshint = require('gulp-jshint'),
-  changed = require('gulp-changed'),
-  concat = require('gulp-concat'),
-  // cache =                 require('gulp-cache'),
-  // filter =                require('gulp-filter'),
-  // imagemin =              require('gulp-imagemin'),
-  // inject =                require('gulp-inject'),
-  // util =                  require('gulp-util'),
-  // handlebars =            require('gulp-compile-handlebars'),
-  // directoryMap =          require('gulp-directory-map'),
-  // runSequence =           require('run-sequence'),
-  // imageResize =           require('gulp-image-resize'),
-  // promise =               require("gulp-stream-to-promise"),
+// ===================================================
+// 1. Setup
+// ===================================================
 
-  // Define default  folders
-  source = 'src/',
-  styleguide = 'styleguide/',
-  dest = 'dist/',
-  tmp = '.tmp/';
+// 1.1 - Gulp modules
+const gulp = require('gulp'),
+    del = require('del'),
+    browserSync = require('browser-sync').create(),
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    autoprefixer = require('gulp-autoprefixer'),
+    handlebars = require('gulp-compile-handlebars'),
+    rename = require('gulp-rename');
 
-// Config
-var paths = {
-    scss: source + '**/*.scss',
-    js: source + '**/*.js',
-    template: styleguide + 'templates/*'
-  },
-  dests = {
-    css: dest + 'css/',
-  },
-  options = {
-    autoprefix: 'last 3 version',
-    jshint: '',
-    jshint_reporter: 'default',
-    scss: {
-      style: 'compressed',
-      compass: true
-    },
-    uglify: {
-      mangle: false
-    },
-    clean: {
-      read: false,
-      allowEmpty: true
-    }
-  };
+// 1.2 - Project Paths
+const root = './src/';
+const dist = './dist/';
+const all = '**/*.*';
 
-// Clean
-gulp.task('clean', function () {
-  return gulp.src([
-      dest, tmp
-    ], options.clean)
-    .pipe(clean())
-    .pipe(notify({
-      message: 'Clean task complete.'
-    }))
-});
+const src = new function () {
+    this.all = root + all;
+    this.root = root;
+    this.dist = dist;
+    this.styles = this.root + 'styles/**/*.scss';
+    this.assets = 'websites/assets/**/*.*';
+    this.templates = this.root + 'templates/';
+    this.partials = this.templates + 'partials/';
+    this.components = this.partials + 'components/**/*.*';
+}
 
-// CSS
-gulp.task('css', function () {
-  return gulp.src(paths.scss)
-    .pipe(sass())
-    .pipe(autoprefixer(options.autoprefix))
-    .pipe(gulp.dest(dests.css))
-    .pipe(rename({
-      suffix: '.min'
-    }))
-    .pipe(minifycss())
-    .pipe(gulp.dest(dest))
-    .pipe(notify({
-      message: 'CSS task complete.'
-    }))
-});
+// ===================================================
+// 2. Styles Framweork
+// ===================================================
 
-// // JS
-// gulp.task('js', function () {
-//   return gulp.src(paths.js)
-//     .pipe(changed(dests.js))
-//     .pipe(babel({
-//       presets: ['env']
-//     }))
-//     .pipe(jshint(options.jshint))
-//     .pipe(jshint.reporter(options.jshint_reporter))
-//     .pipe(gulp.dest(dests.js))
-//     .pipe(uglify(options.uglify))
-//     .pipe(concat('all.min.js'))
-//     .pipe(gulp.dest(dests.js))
-//     .pipe(notify({
-//       message: 'Scripts task complete.'
-//     }))
-// });
+// 2.1 - Compile SASS and minify CSS
+// ---------------------------------------------------
+function styles() {
+    return gulp
+        .src(src.styles)
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .on('error', sass.logError)
+        .pipe(autoprefixer({
+            browsers: ['last 3 versions'],
+        }))
+        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulp.dest(src.dist + 'css/'))
+    // .pipe(browserSync.stream());
+};
+exports.styles = styles
 
+// 2.2 - Handlebars templates
+// ---------------------------------------------------
+function templates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [src.partials]
+        }
+    return gulp.src(src.templates + '*.hbs')
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(src.dist))
+    // .pipe(browserSync.stream());
+};
+exports.templates = templates;
 
+// 2.2 - Assets
+// ---------------------------------------------------
+function assets() {
+    return gulp.src(src.assets)
+        .pipe(gulp.dest(dist + '/assets/'))
+};
+exports.assets = assets;
 
-// gulp.task('portfolio_generator_tmp', function() {
-//   var portfolioSrc = 'assets/portfolio_generator/';
-//   var tasks = []
-//   var pages =  require('./'+source+portfolioSrc+'config.json');
-//   for(var j=0; j<pages.length; j++) {
-//     var mainPageObj = pages[j];
-//     var mainPageUrl = mainPageObj.page+'/';
-//     var projects = mainPageObj.projects;
-//     for(var i=0; i<projects.length; i++) {
-//         // create projects
-//         var project = projects[i],
-//             projectName = projects[i].projectUrl.replace(/ +/g, '-').toLowerCase();
-//         // get json of all images for each project cat and write to .tmp folder
-//         var stream = gulp.src(dest+mainPageUrl+projectName+'/**/*.jpg')
-//             .pipe(directoryMap({
-//              filename: 'images.json'
-//             }))
-//             .pipe(gulp.dest('./'+tmp+mainPageUrl+projectName+'/'));
-//         var prom = promise(stream);
-//         tasks.push(prom);
-//     }
-//   }
-//   return Promise.all(tasks);
-// });
-// gulp.task('portfolio_generator', function() {
-//   var portfolioSrc = 'assets/portfolio_generator/';
-//   var pages =  require('./'+source+portfolioSrc+'config.json');
-//   for(var j=0; j<pages.length; j++) {
-//     pages[j].projectList=[];
-//     var mainPageObj = pages[j];
-//     var mainPageUrl = mainPageObj.page+'/';
-//     var projects = mainPageObj.projects;
-//     for(var i=0; i<projects.length; i++) {
-//         // create projects
-//         var project = projects[i],
-//             projectName = projects[i].projectUrl.replace(/ +/g, '-').toLowerCase();
-//         pages[j].projectList[i]={};
-//         pages[j].projectList[i].name=projects[i].name;
-//         pages[j].projectList[i].url=projects[i].projectUrl;
-//         pages[j].projectList[i].projects=pages[j].projectList[i].projects||[];
-//         // create each project pages
-//         var imagesJson = require('./'+tmp+mainPageUrl+projectName+'/images.json');
-//         // reformat the json file with proper structure
-//         var images = {};
-//         for (var proj in imagesJson) {
-//           var details = require('./'+source+portfolioSrc+mainPageUrl+projectName+'/'+proj+'/details.json');
-//           // add the project to the object to further generate page
-//           pages[j].projectList[i].projects.push({'name':details.name,'url':proj});
-//           images[proj]=Object.assign({}, details);
-//           // add name
-//           images[proj].projectName = projects[i].name;
-//           images[proj].projectUrl = projects[i].projectUrl;
-//           images[proj].categoryUrl = mainPageObj.page;
-//           images[proj].categoryName = mainPageObj.name;
-//           // add details for each project
-//           // add images
-//           images[proj].illustrations=[];
-//           for (var image in imagesJson[proj]){
-//             if (image.toLowerCase().indexOf('thumbnail.jpg')!=-1){
-//               images[proj]['thumbnail']=image;
-//             }
-//             else if (image.toLowerCase().indexOf('building.jpg')!=-1){
-//               images[proj]['building']=image;
-//             }
-//             else if (image.toLowerCase().indexOf('_1.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_2.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_3.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_4.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_5.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_6.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_7.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_8.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_9.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('_10.jpg')!=-1){
-//               images[proj].illustrations.push(image);
-//             }
-//             else if (image.toLowerCase().indexOf('before.jpg')!=-1){
-//               images[proj]['before']=image;
-//             }
-//             else if (image.toLowerCase().indexOf('after.jpg')!=-1){
-//               images[proj]['after']=image;
-//             }
-//           }
-//           images[proj].illustrations_isMmultiple = (images[proj].illustrations.length>1)?'yes':0;
-//         }
-//         for (var proj in images) {
-//           gulp.src(paths.portfolio_template.pages)
-//               .pipe(handlebars(images[proj]))
-//               .pipe(rename(proj + "/index.php"))
-//               .pipe(gulp.dest(dests.php+'/'+mainPageUrl+projectName));
-//         }
-//     }
-//     for(var p=0; p<pages.length; p++) {
-//       gulp.src(paths.portfolio_template.home)
-//         .pipe(handlebars(pages[p]))
-//         .pipe(rename(pages[p].page + "/index.php"))
-//         .pipe(gulp.dest(dests.php));
-//     }
-// }
-// });
+// 2.3 - Reload page
+// ---------------------------------------------------
+function liveReload() {
+    browserSync.reload();
+};
 
-// Watch
-// gulp.task('watch', function () {
-//     gulp.watch( paths.scss, ['css'] );
-//     gulp.watch( paths.js, ['js'] );
-//     //gulp.watch( paths.js, ['deps'] );
-//     //  gulp.watch( paths.php, ['phpunit'] );
-//     gulp.watch( paths.php, ['php'] );
-//     gulp.watch( paths.images, ['images'] );
-// });
+// 2.4 - Start server and watch files
+// ---------------------------------------------------
+function liveServer() {
+    browserSync.init({
+        server: {
+            baseDir: dist
+        }
+    });
+    gulp.watch(src.all).on('change', gulp.series(build, liveReload));
+};
+
+// 2.5 - Build
+// ---------------------------------------------------
+function clean(path = dist) {
+    return del(path);
+};
+const cleanDist = gulp.series(() => clean());
+const build = gulp.series(cleanDist, templates, styles, assets);
+
+// ===================================================
+// 2. Styleguide
+// ===================================================
+
+// 2.1 - Paths 
+// ---------------------------------------------------
+const styleguide = new function () {
+    this.folder = 'styleguide/';
+    this.all = this.folder + all;
+    this.root = this.folder;
+    this.dist = this.folder + 'build/';
+    this.styles = this.root + 'styles/**/*.scss';
+    this.assets = this.root + 'assets/**/*.*';
+    this.templatesAll = this.root + 'templates/**/*.hbs';
+    this.templates = this.root + 'templates/*.hbs';
+    this.partials = this.root + 'templates/partials/';
+    this.components = this.root + 'templates/components/';
+}
+
+// 2.2 - Handlebars templates
+// ---------------------------------------------------
+function copyComponents() {
+    return gulp.src(src.components)
+        .pipe(gulp.dest(styleguide.components))
+}
+exports.copyComponents = copyComponents
+
+function styleguideTemplates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [styleguide.partials]
+        }
+    return gulp.src(styleguide.templates)
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(styleguide.dist))
+    // .pipe(browserSync.stream());
+};
+exports.styleguideTemplates = styleguideTemplates;
+
+// 2.2 - SASS Files
+// ---------------------------------------------------
+function styleguideStyles() {
+    return gulp
+        .src(styleguide.styles)
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .on('error', sass.logError)
+        .pipe(autoprefixer({
+            browsers: ['last 3 versions'],
+        }))
+        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulp.dest(styleguide.dist + 'assets/css/'))
+    // .pipe(browserSync.stream());
+};
+exports.styleguideStyles = styleguideStyles
 
 
-//
-//
-// gulp.task('default', function (callback) {
-//   runSequence('clean',
-//     'portfolio_generator_images',
-//     'portfolio_generator_tmp',
-//     ['php','fonts','css','js'],
-//     'deps',
-//     'inject-deps',
-//     ['images','contentimages'],
-//     'portfolio_generator',
-//     'watch'
-//   );
-// });
+// 2.3 - Assets
+// ---------------------------------------------------
+function styleguideAssets() {
+    return gulp.src(styleguide.assets)
+        .pipe(gulp.dest(styleguide.dist + 'assets/'))
+};
+exports.styleguideAssets = styleguideAssets;
+
+// 2.4 - Cleand Build
+const styleguideClean = gulp.series(() => clean(styleguide.dist),() => clean(styleguide.components));
+gulp.task('styleguideClean', styleguideClean);
+
+// 2.5 - Live Server
+// ---------------------------------------------------
+function styleguideLiveServer() {
+    browserSync.init({
+        server: {
+            baseDir: styleguide.dist
+        }
+    });
+    gulp.watch(styleguide.styles).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.templates).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.partials + all).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.assets).on('change', gulp.series(styleguideBuild, liveReload));
+};
+
+// 2.6 - Build
+// ---------------------------------------------------
+const styleguideBuild = gulp.series(
+    styleguideClean,
+    copyComponents,
+    styleguideAssets,
+    styleguideTemplates,
+    styleguideStyles
+);
+
+// ===================================================
+// 3. Gulp Main Tasks
+// ===================================================
+
+gulp.task('clean', gulp.series(cleanDist, styleguideClean));
+gulp.task('develop', gulp.series(build, liveServer));
+gulp.task('build', build);
+gulp.task('default', gulp.series('develop'));
+gulp.task('styleguideBuild', styleguideBuild);
+gulp.task('styleguideStart', gulp.series(
+    styleguideBuild,
+    styleguideLiveServer
+));

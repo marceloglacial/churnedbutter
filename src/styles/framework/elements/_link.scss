@@ -1,0 +1,18 @@
+// ======================================================
+// SASS Files and structures based on:
+// * https://milligram.io/ 
+// * https://bulma.io/
+// ======================================================
+
+
+// Link
+// ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+a {
+	color: $color-secondary;
+
+	&:focus,
+	&:hover {
+		color: $color-secondary;
+	}
+}

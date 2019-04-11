@@ -1,0 +1,70 @@
+// ======================================================
+// SASS Files and structures based on:
+// * https://milligram.io/ 
+// * https://bulma.io/
+// ======================================================
+
+
+// Typography 
+// ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+// Fonts
+$font-sans-serif: 'Helvetica', 'Arial', sans-serif;
+$font-serif: 'Georgia,"Times New Roman",Times,serif';
+$font-primary: $font-sans-serif;
+$font-secondary: $font-serif;
+$font-roboto: "robotocondensed-bold",Helvetica,Arial,sans-serif;
+
+// Sizes
+$size-1: 3rem !default;
+$size-2: 2.5rem !default;
+$size-3: 2rem !default;
+$size-4: 1.5rem !default;
+$size-5: 1.25rem !default;
+$size-6: 1rem !default;
+$size-7: 0.75rem !default;
+
+$size-11: 0.6875rem !default;
+
+// Text Weight 
+$weight-light: 300 !default;
+$weight-normal: 400 !default;
+$weight-medium: 500 !default;
+$weight-semibold: 600 !default;
+$weight-bold: 700 !default;
+
+// Import Fonts
+@font-face {
+    font-family: "barlowcondensed-medium";
+    font-display: fallback;
+    src: url("/assets/fonts/barlowcondensed-medium/barlowcondensed-medium.woff2") format("woff2"),
+    url("/assets/fonts/barlowcondensed-medium/barlowcondensed-medium.woff") format("woff");
+}
+
+@font-face {
+    font-family: "cabincondensed-semibold";
+    font-display: fallback;
+    src: url("/assets/fonts/cabincondensed-semibold/cabincondensed-semibold.woff2") format("woff2"),
+    url("/assets/fonts/cabincondensed-semibold/cabincondensed-semibold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "roboto-regular";
+    font-display: fallback;
+    src: url("/assets/fonts/roboto-regular/roboto-regular.woff2") format("woff2"),
+    url("/assets/fonts/roboto-regular/roboto-regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "robotocondensed-regular";
+    font-display: fallback;
+    src: url("/assets/fonts/robotocondensed-regular/robotocondensed-regular.woff2") format("woff2"),
+    url("/assets/fonts/robotocondensed-regular/robotocondensed-regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "robotocondensed-bold";
+    font-display: fallback;
+    src: url("/assets/fonts/robotocondensed-bold/robotocondensed-bold.woff2") format("woff2"),
+    url("/assets/fonts/robotocondensed-bold/robotocondensed-bold.woff") format("woff");
+}
