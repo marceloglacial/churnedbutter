@@ -12,7 +12,7 @@ $color-secondary: $red-dark !default;
 $color-tertiary: $grey-lighter !default;
 $color-quaternary: $grey-light !default;
 $color-quinary: $grey !default;
-$color-highlight: $red-dark;
+$color-highlight: $red-dark !default;
 
 
 // ========================================================
@@ -27,5 +27,5 @@ $page-header-nav-button-close: '/assets/img/icon-close.svg' !default;
 
 
 // Sidebar
-$nav-link-color: $color-primary; 
-$nav-link-decoration: underline;
+$nav-link-color: $color-primary !default; 
+$nav-link-decoration: underline !default;

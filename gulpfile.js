@@ -33,17 +33,6 @@ const app = new function() {
     this.dist = dist + this.dirname;
 }
 
-const styleguide = new function () {
-    this.root = './styleguide/';
-    this.dist = dist;
-    this.all = this.root + all;
-    this.templates = this.root + 'templates/';
-    this.partials = this.templates + 'partials/';
-    this.js = this.root + 'js/';
-    this.img = this.root + 'img/';
-};
-
-
 // ===================================================
 // 2. App - Websites
 // ===================================================
