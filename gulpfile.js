@@ -22,9 +22,10 @@ const src = new function () {
     this.root = root;
     this.dist = dist;
     this.styles = this.root + 'styles/**/*.scss';
+    this.assets = 'websites/assets/**/*.*';
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
-    this.assets = 'websites/assets/**/*.*';
+    this.components = this.partials + 'components/**/*.*';
 }
 
 // ===================================================
@@ -101,14 +102,6 @@ function clean(path = dist) {
 const cleanDist = gulp.series(() => clean());
 const build = gulp.series(cleanDist, templates, styles, assets);
 
-// 2.6 - Gulp Main Tasks
-// ---------------------------------------------------
-gulp.task('clean', cleanDist);
-gulp.task('develop', gulp.series(build, liveServer));
-gulp.task('build', build);
-gulp.task('default', gulp.series('develop'));
-
-
 // ===================================================
 // 2. Styleguide
 // ===================================================
@@ -121,14 +114,21 @@ const styleguide = new function () {
     this.root = this.folder;
     this.dist = this.folder + 'build/';
     this.styles = this.root + 'styles/**/*.scss';
+    this.assets = this.root + 'assets/**/*.*';
     this.templatesAll = this.root + 'templates/**/*.hbs';
     this.templates = this.root + 'templates/*.hbs';
     this.partials = this.root + 'templates/partials/';
-    this.assets = this.root + 'assets/**/*.*';
+    this.components = this.root + 'templates/components/';
 }
 
 // 2.2 - Handlebars templates
 // ---------------------------------------------------
+function copyComponents() {
+    return gulp.src(src.components)
+        .pipe(gulp.dest(styleguide.components))
+}
+exports.copyComponents = copyComponents
+
 function styleguideTemplates() {
     var templateData = {},
         options = {
@@ -174,7 +174,7 @@ function styleguideAssets() {
 exports.styleguideAssets = styleguideAssets;
 
 // 2.4 - Cleand Build
-const styleguideClean = gulp.series(() => clean(styleguide.dist));
+const styleguideClean = gulp.series(() => clean(styleguide.dist),() => clean(styleguide.components));
 gulp.task('styleguideClean', styleguideClean);
 
 // 2.5 - Live Server
@@ -186,12 +186,31 @@ function styleguideLiveServer() {
         }
     });
     gulp.watch(styleguide.styles).on('change', gulp.series(styleguideBuild, liveReload));
-    gulp.watch(styleguide.templatesAll).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.templates).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.partials + all).on('change', gulp.series(styleguideBuild, liveReload));
     gulp.watch(styleguide.assets).on('change', gulp.series(styleguideBuild, liveReload));
 };
 
 // 2.6 - Build
 // ---------------------------------------------------
-const styleguideBuild = gulp.series(styleguideClean, styleguideAssets, styleguideTemplates, styleguideStyles);
+const styleguideBuild = gulp.series(
+    styleguideClean,
+    copyComponents,
+    styleguideAssets,
+    styleguideTemplates,
+    styleguideStyles
+);
+
+// ===================================================
+// 3. Gulp Main Tasks
+// ===================================================
+
+gulp.task('clean', gulp.series(cleanDist, styleguideClean));
+gulp.task('develop', gulp.series(build, liveServer));
+gulp.task('build', build);
+gulp.task('default', gulp.series('develop'));
 gulp.task('styleguideBuild', styleguideBuild);
-gulp.task('styleguideStart', gulp.series(styleguideBuild, styleguideLiveServer));
+gulp.task('styleguideStart', gulp.series(
+    styleguideBuild,
+    styleguideLiveServer
+));
