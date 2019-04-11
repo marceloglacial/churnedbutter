@@ -1,1 +1,0 @@
-"use strict";function toogleSidebar(e){document.getElementsByClassName(e)[0].onclick=function(e){e.preventDefault(),document.getElementById("sidebar").classList.toggle("open")}}toogleSidebar("sidebar-open"),toogleSidebar("sidebar-close");

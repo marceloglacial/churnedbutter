@@ -1,0 +1,39 @@
+// ======================================================
+// SASS Files and structures based on:
+// * https://milligram.io/ 
+// * https://bulma.io/
+// ======================================================
+
+@import 'colors';
+@import 'typography';
+
+// ========================================================
+// Base
+// ========================================================
+
+// Colors
+$color-initial: $white !default;
+$color-primary: $black !default;
+$color-secondary: $red-dark !default;
+$color-tertiary: $grey-lighter !default;
+$color-quaternary: $grey-light !default;
+$color-quinary: $grey !default;
+$color-highlight: $red-dark !default;
+
+
+// ========================================================
+// Components
+// ========================================================
+
+// Page Header
+$header-height: 48px !default;
+$nav-button-size: $header-height !default;
+
+// TO-DO: Change this to base.64
+$page-header-nav-button: '/assets/img/icon-menu.svg' !default;
+$page-header-nav-button-close: '/assets/img/icon-close.svg' !default;
+
+
+// Sidebar
+$nav-link-color: $color-primary !default; 
+$nav-link-decoration: underline !default;

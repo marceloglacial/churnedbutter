@@ -62,3 +62,5 @@ typings/
 
 # macOs thumbnails
 .DS_Store
+
+dist

@@ -16,96 +16,99 @@ const gulp = require('gulp'),
     rename = require('gulp-rename');
 
 // 1.2 - Project Paths
-const src = './src/';
+const root = './src/';
 const dist = './dist/';
 const all = '**/*.*';
 
-const app = new function() {
-    this. all = src + all;
-    this.dirname = 'websites/';
-    this.root = src + this.dirname;
+const src = new function () {
+    this.all = root + all;
+    this.root = root;
+    this.dist = dist;
     this.styles = this.root + 'styles/**/*.scss';
-    this.scripts = this.root + 'assets/js/**/*.js';
-    this.images = this.root + 'assets/img/**/*.*';
-    this.fonts = this.root + 'assets/fonts/**/*.*';
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
-    this.dist = dist + this.dirname;
+    this.fonts = this.root + 'fonts/**/*.*';
+    this.fontsDist = this.dist + 'fonts/';
 }
 
 // ===================================================
-// 2. App - Websites
+// 2. src - Websites
 // ===================================================
 
 // 2.1 - Compile SASS and minify CSS
 function styles() {
     return gulp
-        .src(app.styles)
+        .src(src.styles)
         .pipe(sourcemaps.init())
         .pipe(sass({
             outputStyle: 'compressed'
         }))
         .on('error', sass.logError)
         .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
+            browsers: ['last 3 versions'],
         }))
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(app.dist + 'assets/css'))
-        // .pipe(browserSync.stream());
+        .pipe(gulp.dest(src.dist))
+    // .pipe(browserSync.stream());
 };
 exports.styles = styles
 
-// 2.2  - Minify JS 
+
+// 2.2 - Handlebars templates
+function templates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [src.partials]
+        }
+    return gulp.src(src.templates + '*.hbs')
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(src.dist))
+    // .pipe(browserSync.stream());
+};
+exports.templates = templates;
+
+// 2.2 - Fonts
+function fonts() {
+    return gulp.src(src.fonts)
+        .pipe(gulp.dest(src.fontsDist))
+};
+exports.fonts = fonts;
+
+
+// ===================================================
+// 3. Templares
+// ===================================================
+
+// 3.1  - Minify JS 
 function scripts() {
     return (
         gulp
-        .src(app.scripts, {
+        .src(src.scripts, {
             sourcemaps: true
         })
         .pipe(babel({
             presets: ['@babel/env']
         }))
         .pipe(uglify())
-        .pipe(gulp.dest(app.dist + 'assets/js'))
+        .pipe(gulp.dest(src.dist + 'assets/js'))
     );
 }
 exports.scripts = scripts
 
-// / 2.3 - Minify Images
+// 3.2 - Minify Images
 function images() {
     return (
         gulp
-        .src(app.images)
+        .src(src.images)
         .pipe(imagemin())
-        .pipe(gulp.dest(app.dist + 'assets/img'))
+        .pipe(gulp.dest(src.dist + 'assets/img'))
     )
 };
 exports.images = images
-
-// 2.4 - Handlebars templates
-function templates() {
-    var templateData = {},
-        options = {
-            ignorePartials: true,
-            batch: [app.partials]
-        }
-    return gulp.src(app.templates + '*.hbs')
-        .pipe(handlebars(templateData, options))
-        .pipe(rename(function (path) {
-            path.extname = '.html';
-        }))
-        .pipe(gulp.dest(app.dist))
-        // .pipe(browserSync.stream());
-};
-exports.templates = templates;
-
-// 2.5 - Fonts
-function fonts(){
-    return gulp.src(app.fonts)
-    .pipe(gulp.dest(app.dist + 'assets/fonts'))
-};
-exports.fonts = fonts;
-
 
 // ===================================================
 // 4. Live Server
@@ -123,7 +126,7 @@ function liveServer() {
             baseDir: dist + 'websites'
         }
     });
-    gulp.watch(app.all).on('change',  gulp.series(build, liveReload));
+    gulp.watch(src.all).on('change', gulp.series(build, liveReload));
 };
 
 // ===================================================
