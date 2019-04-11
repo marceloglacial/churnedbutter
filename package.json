@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "develop": "gulp develop"
+    "start": "npm run develop | npm run styleguide",
+    "develop": "gulp develop",
+    "styleguide": "gulp styleguideStart"
   },
   "repository": {
     "type": "git",
@@ -30,20 +32,14 @@
   },
   "homepage": "https://github.com/andre-the-giant/churnedbutter#readme",
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
     "browser-sync": "^2.26.3",
     "del": "^4.1.0",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
-    "gulp-babel": "^8.0.0",
     "gulp-compile-handlebars": "^0.6.1",
-    "gulp-imagemin": "^5.0.3",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify": "^3.0.2",
-    "i": "^0.3.6",
     "node-sass": "^4.11.0"
   }
 }

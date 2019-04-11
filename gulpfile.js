@@ -9,10 +9,7 @@ const gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     autoprefixer = require('gulp-autoprefixer'),
-    uglify = require('gulp-uglify'),
-    babel = require('gulp-babel'),
     handlebars = require('gulp-compile-handlebars'),
-    imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename');
 
 // 1.2 - Project Paths
@@ -27,15 +24,15 @@ const src = new function () {
     this.styles = this.root + 'styles/**/*.scss';
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
-    this.fonts = this.root + 'fonts/**/*.*';
-    this.fontsDist = this.dist + 'fonts/';
+    this.assets = 'websites/assets/**/*.*';
 }
 
 // ===================================================
-// 2. src - Websites
+// 2. Styles Framweork
 // ===================================================
 
 // 2.1 - Compile SASS and minify CSS
+// ---------------------------------------------------
 function styles() {
     return gulp
         .src(src.styles)
@@ -53,8 +50,8 @@ function styles() {
 };
 exports.styles = styles
 
-
 // 2.2 - Handlebars templates
+// ---------------------------------------------------
 function templates() {
     var templateData = {},
         options = {
@@ -71,62 +68,22 @@ function templates() {
 };
 exports.templates = templates;
 
-// 2.2 - Fonts
-function fonts() {
-    return gulp.src(src.fonts)
-        .pipe(gulp.dest(src.fontsDist))
-};
-exports.fonts = fonts;
-
-// 2.3 - Assets
+// 2.2 - Assets
+// ---------------------------------------------------
 function assets() {
-    return gulp.src('./websites/assets/**/*.*')
+    return gulp.src(src.assets)
         .pipe(gulp.dest(dist + '/assets/'))
 };
 exports.assets = assets;
 
-
-// ===================================================
-// 3. Templares
-// ===================================================
-
-// 3.1  - Minify JS 
-function scripts() {
-    return (
-        gulp
-        .src(src.scripts, {
-            sourcemaps: true
-        })
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(uglify())
-        .pipe(gulp.dest(src.dist + 'assets/js'))
-    );
-}
-exports.scripts = scripts
-
-// 3.2 - Minify Images
-function images() {
-    return (
-        gulp
-        .src(src.images)
-        .pipe(imagemin())
-        .pipe(gulp.dest(src.dist + 'assets/img'))
-    )
-};
-exports.images = images
-
-// ===================================================
-// 4. Live Server
-// ===================================================
-
-// 4.1 - Reload page
+// 2.3 - Reload page
+// ---------------------------------------------------
 function liveReload() {
     browserSync.reload();
 };
 
-// 4.2 - Start server and watch files
+// 2.4 - Start server and watch files
+// ---------------------------------------------------
 function liveServer() {
     browserSync.init({
         server: {
@@ -136,30 +93,105 @@ function liveServer() {
     gulp.watch(src.all).on('change', gulp.series(build, liveReload));
 };
 
-// ===================================================
-// 5. Build
-// ===================================================
-
-// 5.1 - Clean build folder 
+// 2.5 - Build
+// ---------------------------------------------------
 function clean(path = dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
-const build = gulp.series(cleanDist, templates, styles, fonts, assets);
+const build = gulp.series(cleanDist, templates, styles, assets);
 
-
-// ===================================================
-// 6. Gulp Main Tasks
-// ===================================================
-
-// 6.1 - Clean dist folder
+// 2.6 - Gulp Main Tasks
+// ---------------------------------------------------
 gulp.task('clean', cleanDist);
-
-// 6.2 - First build and start server
 gulp.task('develop', gulp.series(build, liveServer));
-
-// 6.3 - Build project 
 gulp.task('build', build);
-
-// 6.4 - Default task
 gulp.task('default', gulp.series('develop'));
+
+
+// ===================================================
+// 2. Styleguide
+// ===================================================
+
+// 2.1 - Paths 
+// ---------------------------------------------------
+const styleguide = new function () {
+    this.folder = 'styleguide/';
+    this.all = this.folder + all;
+    this.root = this.folder;
+    this.dist = this.folder + 'build/';
+    this.styles = this.root + 'styles/**/*.scss';
+    this.templatesAll = this.root + 'templates/**/*.hbs';
+    this.templates = this.root + 'templates/*.hbs';
+    this.partials = this.root + 'templates/partials/';
+    this.assets = this.root + 'assets/**/*.*';
+}
+
+// 2.2 - Handlebars templates
+// ---------------------------------------------------
+function styleguideTemplates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [styleguide.partials]
+        }
+    return gulp.src(styleguide.templates)
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(styleguide.dist))
+    // .pipe(browserSync.stream());
+};
+exports.styleguideTemplates = styleguideTemplates;
+
+// 2.2 - SASS Files
+// ---------------------------------------------------
+function styleguideStyles() {
+    return gulp
+        .src(styleguide.styles)
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .on('error', sass.logError)
+        .pipe(autoprefixer({
+            browsers: ['last 3 versions'],
+        }))
+        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulp.dest(styleguide.dist + 'assets/css/'))
+    // .pipe(browserSync.stream());
+};
+exports.styleguideStyles = styleguideStyles
+
+
+// 2.3 - Assets
+// ---------------------------------------------------
+function styleguideAssets() {
+    return gulp.src(styleguide.assets)
+        .pipe(gulp.dest(styleguide.dist + 'assets/'))
+};
+exports.styleguideAssets = styleguideAssets;
+
+// 2.4 - Cleand Build
+const styleguideClean = gulp.series(() => clean(styleguide.dist));
+gulp.task('styleguideClean', styleguideClean);
+
+// 2.5 - Live Server
+// ---------------------------------------------------
+function styleguideLiveServer() {
+    browserSync.init({
+        server: {
+            baseDir: styleguide.dist
+        }
+    });
+    gulp.watch(styleguide.styles).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.templatesAll).on('change', gulp.series(styleguideBuild, liveReload));
+    gulp.watch(styleguide.assets).on('change', gulp.series(styleguideBuild, liveReload));
+};
+
+// 2.6 - Build
+// ---------------------------------------------------
+const styleguideBuild = gulp.series(styleguideClean, styleguideAssets, styleguideTemplates, styleguideStyles);
+gulp.task('styleguideBuild', styleguideBuild);
+gulp.task('styleguideStart', gulp.series(styleguideBuild, styleguideLiveServer));
