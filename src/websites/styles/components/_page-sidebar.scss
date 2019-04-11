@@ -1,7 +1,3 @@
-// Import
-@import '../base/variables';
-@import '../util/all';
-
 .sidebar {
     position: fixed;
     top: 0;
@@ -41,6 +37,7 @@
             @include full-size;
             padding: 5px 16px;
             color: $nav-link-color;
+            text-decoration: none;
 
             &:hover {
                 text-decoration: $nav-link-decoration;

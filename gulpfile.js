@@ -27,6 +27,7 @@ const app = new function() {
     this.styles = this.root + 'styles/**/*.scss';
     this.scripts = this.root + 'assets/js/**/*.js';
     this.images = this.root + 'assets/img/**/*.*';
+    this.fonts = this.root + 'assets/fonts/**/*.*';
     this.templates = this.root + 'templates/';
     this.partials = this.templates + 'partials/';
     this.dist = dist + this.dirname;
@@ -92,7 +93,7 @@ function images() {
 };
 exports.images = images
 
-// 2.4 - Generate HTML from Handlebars templates
+// 2.4 - Handlebars templates
 function templates() {
     var templateData = {},
         options = {
@@ -108,6 +109,13 @@ function templates() {
         // .pipe(browserSync.stream());
 };
 exports.templates = templates;
+
+// 2.5 - Fonts
+function fonts(){
+    return gulp.src(app.fonts)
+    .pipe(gulp.dest(app.dist + 'assets/fonts'))
+};
+exports.fonts = fonts;
 
 
 // ===================================================
@@ -138,7 +146,7 @@ function clean(path = dist) {
     return del(path);
 };
 const cleanDist = gulp.series(() => clean());
-const build = gulp.series(cleanDist, templates, styles, scripts, images);
+const build = gulp.series(cleanDist, templates, styles, scripts, images, fonts);
 
 
 // ===================================================
