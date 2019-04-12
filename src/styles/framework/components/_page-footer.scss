@@ -1,0 +1,44 @@
+.page-footer {
+    background: $black;
+    color: $white;
+    padding: 10px;
+
+    .footer-logo {
+        display: inline-block;
+        width: 100%;
+
+        &-container {
+            border-top: 1px solid $black-soft;
+            border-bottom: 1px solid $black-soft;
+            margin: 10px 0;
+            padding: 15px 0;
+        }
+
+        &-postmedia {
+            margin-right: 5px;
+        }
+    }
+
+    .copyright {
+        font-family: $font-sans-serif;
+        font-size: $size-11;
+        color: $white;
+        line-height: 19px;
+
+        a {
+            color: $white;
+            text-decoration: none;
+        }
+    }
+
+    .privacy-links {
+        padding: 10px 0;
+
+        a {
+            &:not(:last-child):after {
+                content: '|';
+                padding: 0 5px;
+            }
+        }
+    }
+}
