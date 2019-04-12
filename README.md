@@ -13,10 +13,10 @@ It is built with NPM and us using Gulp packet manager to manage dependencies and
 2. Install Gulp globally `npm install gulp-cli --global`
 3. cd to the root and run `npm install`
 
-### Run SASS Development
+### Start Framework development
 
 ```terminal
-    npm develop
+    npm run develop
 ```
 ### Run Styleguides
 
