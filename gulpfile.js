@@ -1,9 +1,9 @@
-// ===================================================
+// ==============================================================
 // 1. Project Setup
-// ===================================================
-
+// ==============================================================
 
 // 1.1 - Gulp modules
+// -------------------------------------
 const gulp = require('gulp'),
     del = require('del'),
     browserSync = require('browser-sync').create(),
@@ -13,21 +13,21 @@ const gulp = require('gulp'),
     handlebars = require('gulp-compile-handlebars'),
     rename = require('gulp-rename');
 
-
 // 1.2 - Project Paths
+// -------------------------------------
 const app = './src/';
 const dist = './dist/';
 const all = '**/*.*';
 const folders = '**/*';
 
 
-// ===================================================
+// ==============================================================
 // 2. Functions
-// ===================================================
+// ==============================================================
 
 
 // 2.1 - Clean dist folder
-// ---------------------------------------------------
+// -------------------------------------
 function clean() {
     return del(dist);
 };
@@ -35,7 +35,7 @@ exports.clean = clean;
 
 
 // 2.2 - Complie SASS
-// ---------------------------------------------------
+// -------------------------------------
 function styles(src, dest) {
     return gulp
         .src(src)
@@ -53,7 +53,7 @@ function styles(src, dest) {
 
 
 // 2.3 - Complie Handlebars templates
-// ---------------------------------------------------
+// -------------------------------------
 function templates(templates, partials, dest) {
     var templateData = {},
         options = {
@@ -70,7 +70,7 @@ function templates(templates, partials, dest) {
 
 
 // 2.2 - Copy
-// ---------------------------------------------------
+// -------------------------------------
 function copy(src, dest) {
     return gulp.src(src)
         .pipe(gulp.dest(dest));
@@ -78,7 +78,7 @@ function copy(src, dest) {
 
 
 // 2.3 - Start server
-// ---------------------------------------------------
+// -------------------------------------
 function liveServer(base) {
     let path = base ? base : styleguide.dist;
     browserSync.init({
@@ -92,19 +92,20 @@ function liveServer(base) {
 
 
 // 2.4 - Reload page
-// ---------------------------------------------------
+// -------------------------------------
 function liveReload() {
     browserSync.reload();
 };
 
 
 
-// ===================================================
+// ==============================================================
 // 3. Framework
-// ===================================================
+// ==============================================================
+
 
 // 3.1 - Paths
-// ---------------------------------------------------
+// -------------------------------------
 const framework = new function () {
     this.folder = app + 'framework/'
     this.dist = dist + 'framework/';
@@ -113,16 +114,17 @@ const framework = new function () {
 };
 
 // 2.2 - Build (compile SASS)
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('frameworkBuild', () => styles(framework.styles, framework.dist));
 
 
-// ===================================================
+// ==============================================================
 // 3. Styleguide
-// ===================================================
+// ==============================================================
+
 
 // 3.1 - Paths 
-// ---------------------------------------------------
+// -------------------------------------
 const styleguide = new function () {
     this.folder = app + 'styleguide/'
     this.dist = dist + 'styleguide/';
@@ -134,36 +136,37 @@ const styleguide = new function () {
 };
 
 // 3.2 - Assets
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('styleguideAssets', () => copy(styleguide.assets, styleguide.dist + 'assets/'));
 
 
 // 3.3 - Styles
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('styleguideStyles', () => styles(styleguide.styles, styleguide.dist + 'assets/css/'));
 
 
 // 3.4 - Templates
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('styleguideTemplates', () => templates(styleguide.templates, styleguide.partials, styleguide.dist));
 
 
 // 3.5 - Build
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('styleguideBuild', gulp.series('styleguideAssets', 'styleguideStyles', 'styleguideTemplates'));
 
 
 // 3.6 - Run Server
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('styleguideServer', () => liveServer());
 
 
-// ===================================================
+// ==============================================================
 // 4. Demo / wwww
-// ===================================================
+// ==============================================================
+
 
 // 4.1 - Paths 
-// ---------------------------------------------------
+// -------------------------------------
 const demo = new function () {
     this.folder = app + 'demo/'
     this.dist = dist + 'demo/';
@@ -174,32 +177,34 @@ const demo = new function () {
 };
 
 // 4.2 - Assets
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('demoAssets', () => copy(demo.assets, demo.dist + 'assets/'));
 
 
 // 4.3 - Styles
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('demoStyles', () => copy(framework.dist + all, demo.dist + 'assets/css/'));
 
 
 // 4.4 - Templates
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('demoTemplates', () => templates(demo.templates, demo.partials, demo.dist));
 
 
 // 4.5 - Build
-// ---------------------------------------------------
+// -------------------------------------
 gulp.task('demoBuild', gulp.series('demoAssets', 'demoStyles', 'demoTemplates'));
 
-// 3.6 - Run Server
-// ---------------------------------------------------
+// 4.5 - Run Server
+// -------------------------------------
 gulp.task('demoServer', () => liveServer(demo.dist));
 
 
-// ===================================================
+// ==============================================================
 // 6. Gulp Main Tasks
-// ===================================================
+// ==============================================================
+
+
 gulp.task('build', gulp.series(clean, 'frameworkBuild', 'styleguideBuild', 'demoBuild'));
 gulp.task('demo', gulp.series('build', 'demoServer'));
 gulp.task('default', gulp.series('build', 'styleguideServer'));
