@@ -20,7 +20,7 @@ const folders = '**/*';
 
 
 // ===================================================
-// 2. General Functions
+// 2. Utility Functions
 // ===================================================
 
 // 2.1 - Clean dist folder
@@ -29,12 +29,6 @@ function clean() {
     return del(dist);
 };
 exports.clean = clean;
-
-// 2.2 - Reload page
-// ---------------------------------------------------
-function liveReload() {
-    browserSync.reload();
-};
 
 
 // ===================================================
@@ -212,6 +206,8 @@ gulp.task('demoServer', () => liveServer(demo.dist));
 // ===================================================
 // 5. Live Server
 // ===================================================
+
+// 5.1 - Start server
 function liveServer(base) {
     let path = base ? base : styleguide.dist;
     browserSync.init({
@@ -222,6 +218,13 @@ function liveServer(base) {
     gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
     gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
 };
+
+// 5.2 - Reload page
+// ---------------------------------------------------
+function liveReload() {
+    browserSync.reload();
+};
+
 
 // ===================================================
 // 6. Gulp Tasks
