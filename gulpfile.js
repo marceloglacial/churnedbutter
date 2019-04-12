@@ -217,6 +217,6 @@ gulp.task('demoBuild',
 // ===================================================
 // 5. Gulp Tasks
 // ===================================================
-gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', styleguideLiveServer));
 gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild'));
 gulp.task('demo', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild'));
+gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', styleguideLiveServer));
