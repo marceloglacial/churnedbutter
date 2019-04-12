@@ -64,7 +64,7 @@ function frameworkBuild() {
             browsers: ['last 3 versions'],
         }))
         .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(framework.dist + 'css/'))
+        .pipe(gulp.dest(framework.dist))
 };
 exports.frameworkBuild = frameworkBuild;
 
@@ -133,7 +133,6 @@ exports.styleguideTemplates = styleguideTemplates;
 // ---------------------------------------------------
 gulp.task('styleguideBuild', 
     gulp.series(
-        clean,
         styleguideAssets,
         styleguideStyles,
         styleguideTemplates
@@ -148,8 +147,8 @@ function styleguideLiveServer() {
             baseDir: styleguide.dist
         }
     });
-    gulp.watch(framework.all).on('change', gulp.series('frameworkBuild', liveReload));
-    gulp.watch(styleguide.all).on('change', gulp.series('styleguideBuild', liveReload));
+    gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
+    gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
 };
 exports.styleguideLiveServer = styleguideLiveServer;
 
@@ -158,9 +157,66 @@ exports.styleguideLiveServer = styleguideLiveServer;
 // 4. Demo / wwww
 // ===================================================
 
+// 4.1 - Paths 
+// ---------------------------------------------------
+const demo = new function () {
+    this.folder = app + 'demo/'
+    this.dist = dist + 'demo/';
+    this.assets = this.folder + 'assets/**/*.*';
+    this.templates = this.folder + '*.hbs';
+    this.partials = this.folder + 'partials';
+    this.all = this.folder + all;
+};
+
+// 4.2 - Assets
+// ---------------------------------------------------
+function demoAssets() {
+    return gulp.src(demo.assets)
+        .pipe(gulp.dest(demo.dist + 'assets/'));
+};
+exports.demoAssets = demoAssets;
+
+
+// 4.3 - Styles
+// ---------------------------------------------------
+function demoStyles() {
+    return gulp.src(framework.dist + all)
+        .pipe(gulp.dest(demo.dist + 'assets/css/'));
+};
+exports.demoStyles = demoStyles;
+
+
+// 4.4 - Templates
+// ---------------------------------------------------
+function demoTemplates() {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [demo.partials]
+        }
+    return gulp.src(demo.templates)
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(demo.dist))
+};
+exports.demoTemplates = demoTemplates;
+
+// 4.5 - Build
+// ---------------------------------------------------
+gulp.task('demoBuild', 
+    gulp.series(
+        demoAssets,
+        demoStyles,
+        demoTemplates
+    )
+);
+
 
 // ===================================================
 // 5. Gulp Tasks
 // ===================================================
-gulp.task('default', gulp.series(styleguideLiveServer));
-gulp.task('build', gulp.series(frameworkBuild));
+gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', styleguideLiveServer));
+gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild'));
+gulp.task('demo', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild'));
