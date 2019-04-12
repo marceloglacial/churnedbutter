@@ -4,10 +4,8 @@
   "description": "UI framework and styleguide for Postmedia websites",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run develop | npm run styleguide",
-    "develop": "gulp develop",
-    "styleguide": "gulp styleguideStart"
+    "start": "gulp",
+    "develop": "gulp build"
   },
   "repository": {
     "type": "git",
