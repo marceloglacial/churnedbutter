@@ -139,18 +139,9 @@ gulp.task('styleguideBuild',
     )
 );
 
-// 3.5 - Live Server
+// 3.6 - Run Server
 // ---------------------------------------------------
-function styleguideLiveServer() {
-    browserSync.init({
-        server: {
-            baseDir: styleguide.dist
-        }
-    });
-    gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
-    gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
-};
-exports.styleguideLiveServer = styleguideLiveServer;
+gulp.task('styleguideServer', () => liveServer());
 
 
 // ===================================================
@@ -213,10 +204,28 @@ gulp.task('demoBuild',
     )
 );
 
+// 3.6 - Run Server
+// ---------------------------------------------------
+gulp.task('demoServer', () => liveServer(demo.dist));
+
 
 // ===================================================
-// 5. Gulp Tasks
+// 5. Live Server
+// ===================================================
+function liveServer(base) {
+    let path = base ? base : styleguide.dist;
+    browserSync.init({
+        server: {
+            baseDir: path
+        }
+    });
+    gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
+    gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
+};
+
+// ===================================================
+// 6. Gulp Tasks
 // ===================================================
 gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild'));
-gulp.task('demo', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild'));
-gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', styleguideLiveServer));
+gulp.task('demo', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', 'demoServer'));
+gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', 'styleguideServer'));
