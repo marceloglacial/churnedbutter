@@ -2,6 +2,7 @@
 // 1. Project Setup
 // ===================================================
 
+
 // 1.1 - Gulp modules
 const gulp = require('gulp'),
     del = require('del'),
@@ -12,6 +13,7 @@ const gulp = require('gulp'),
     handlebars = require('gulp-compile-handlebars'),
     rename = require('gulp-rename');
 
+
 // 1.2 - Project Paths
 const app = './src/';
 const dist = './dist/';
@@ -20,8 +22,9 @@ const folders = '**/*';
 
 
 // ===================================================
-// 2. Utility Functions
+// 2. Functions
 // ===================================================
+
 
 // 2.1 - Clean dist folder
 // ---------------------------------------------------
@@ -29,6 +32,71 @@ function clean() {
     return del(dist);
 };
 exports.clean = clean;
+
+
+// 2.2 - Complie SASS
+// ---------------------------------------------------
+function styles(src, dest) {
+    return gulp
+        .src(src)
+        .pipe(sourcemaps.init())
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .on('error', sass.logError)
+        .pipe(autoprefixer({
+            browsers: ['last 3 versions'],
+        }))
+        .pipe(sourcemaps.write('./maps'))
+        .pipe(gulp.dest(dest))
+};
+
+
+// 2.3 - Complie Handlebars templates
+// ---------------------------------------------------
+function templates(templates, partials, dest) {
+    var templateData = {},
+        options = {
+            ignorePartials: true,
+            batch: [partials]
+        }
+    return gulp.src(templates)
+        .pipe(handlebars(templateData, options))
+        .pipe(rename(function (path) {
+            path.extname = '.html';
+        }))
+        .pipe(gulp.dest(dest))
+};
+
+
+// 2.2 - Copy
+// ---------------------------------------------------
+function copy(src, dest) {
+    return gulp.src(src)
+        .pipe(gulp.dest(dest));
+};
+
+
+// 2.3 - Start server
+// ---------------------------------------------------
+function liveServer(base) {
+    let path = base ? base : styleguide.dist;
+    browserSync.init({
+        server: {
+            baseDir: path
+        }
+    });
+    gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
+    gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
+};
+
+
+// 2.4 - Reload page
+// ---------------------------------------------------
+function liveReload() {
+    browserSync.reload();
+};
+
 
 
 // ===================================================
@@ -46,21 +114,7 @@ const framework = new function () {
 
 // 2.2 - Build (compile SASS)
 // ---------------------------------------------------
-function frameworkBuild() {
-    return gulp
-        .src(framework.styles)
-        .pipe(sourcemaps.init())
-        .pipe(sass({
-            outputStyle: 'compressed'
-        }))
-        .on('error', sass.logError)
-        .pipe(autoprefixer({
-            browsers: ['last 3 versions'],
-        }))
-        .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(framework.dist))
-};
-exports.frameworkBuild = frameworkBuild;
+gulp.task('frameworkBuild', () => styles(framework.styles, framework.dist));
 
 
 // ===================================================
@@ -81,57 +135,23 @@ const styleguide = new function () {
 
 // 3.2 - Assets
 // ---------------------------------------------------
-function styleguideAssets() {
-    return gulp.src(styleguide.assets)
-        .pipe(gulp.dest(styleguide.dist + 'assets/'));
-};
-exports.styleguideAssets = styleguideAssets;
+gulp.task('styleguideAssets', () => copy(styleguide.assets, styleguide.dist + 'assets/'));
+
 
 // 3.3 - Styles
 // ---------------------------------------------------
-function styleguideStyles() {
-    return gulp
-        .src(styleguide.styles)
-        .pipe(sourcemaps.init())
-        .pipe(sass({
-            outputStyle: 'compressed'
-        }))
-        .on('error', sass.logError)
-        .pipe(autoprefixer({
-            browsers: ['last 3 versions'],
-        }))
-        .pipe(sourcemaps.write('./maps'))
-        .pipe(gulp.dest(styleguide.dist + 'assets/css/'))
-};
-exports.styleguideStyles = styleguideStyles
+gulp.task('styleguideStyles', () => styles(styleguide.styles, styleguide.dist + 'assets/css/'));
 
 
 // 3.4 - Templates
 // ---------------------------------------------------
-function styleguideTemplates() {
-    var templateData = {},
-        options = {
-            ignorePartials: true,
-            batch: [styleguide.partials]
-        }
-    return gulp.src(styleguide.templates)
-        .pipe(handlebars(templateData, options))
-        .pipe(rename(function (path) {
-            path.extname = '.html';
-        }))
-        .pipe(gulp.dest(styleguide.dist))
-};
-exports.styleguideTemplates = styleguideTemplates;
+gulp.task('styleguideTemplates', () => templates(styleguide.templates, styleguide.partials, styleguide.dist));
+
 
 // 3.5 - Build
 // ---------------------------------------------------
-gulp.task('styleguideBuild', 
-    gulp.series(
-        styleguideAssets,
-        styleguideStyles,
-        styleguideTemplates
-    )
-);
+gulp.task('styleguideBuild', gulp.series('styleguideAssets', 'styleguideStyles', 'styleguideTemplates'));
+
 
 // 3.6 - Run Server
 // ---------------------------------------------------
@@ -155,48 +175,22 @@ const demo = new function () {
 
 // 4.2 - Assets
 // ---------------------------------------------------
-function demoAssets() {
-    return gulp.src(demo.assets)
-        .pipe(gulp.dest(demo.dist + 'assets/'));
-};
-exports.demoAssets = demoAssets;
+gulp.task('demoAssets', () => copy(demo.assets, demo.dist + 'assets/'));
 
 
 // 4.3 - Styles
 // ---------------------------------------------------
-function demoStyles() {
-    return gulp.src(framework.dist + all)
-        .pipe(gulp.dest(demo.dist + 'assets/css/'));
-};
-exports.demoStyles = demoStyles;
+gulp.task('demoStyles', () => copy(framework.dist + all, demo.dist + 'assets/css/'));
 
 
 // 4.4 - Templates
 // ---------------------------------------------------
-function demoTemplates() {
-    var templateData = {},
-        options = {
-            ignorePartials: true,
-            batch: [demo.partials]
-        }
-    return gulp.src(demo.templates)
-        .pipe(handlebars(templateData, options))
-        .pipe(rename(function (path) {
-            path.extname = '.html';
-        }))
-        .pipe(gulp.dest(demo.dist))
-};
-exports.demoTemplates = demoTemplates;
+gulp.task('demoTemplates', () => templates(demo.templates, demo.partials, demo.dist));
+
 
 // 4.5 - Build
 // ---------------------------------------------------
-gulp.task('demoBuild', 
-    gulp.series(
-        demoAssets,
-        demoStyles,
-        demoTemplates
-    )
-);
+gulp.task('demoBuild', gulp.series('demoAssets', 'demoStyles', 'demoTemplates'));
 
 // 3.6 - Run Server
 // ---------------------------------------------------
@@ -204,31 +198,8 @@ gulp.task('demoServer', () => liveServer(demo.dist));
 
 
 // ===================================================
-// 5. Live Server
+// 6. Gulp Main Tasks
 // ===================================================
-
-// 5.1 - Start server
-function liveServer(base) {
-    let path = base ? base : styleguide.dist;
-    browserSync.init({
-        server: {
-            baseDir: path
-        }
-    });
-    gulp.watch(framework.all).on('change', gulp.series('build', liveReload));
-    gulp.watch(styleguide.all).on('change', gulp.series('build', liveReload));
-};
-
-// 5.2 - Reload page
-// ---------------------------------------------------
-function liveReload() {
-    browserSync.reload();
-};
-
-
-// ===================================================
-// 6. Gulp Tasks
-// ===================================================
-gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild'));
+gulp.task('build', gulp.series(clean, 'frameworkBuild', 'styleguideBuild', 'demoBuild'));
 gulp.task('demo', gulp.series('build', 'demoServer'));
 gulp.task('default', gulp.series('build', 'styleguideServer'));
