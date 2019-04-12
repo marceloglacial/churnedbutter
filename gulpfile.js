@@ -226,6 +226,6 @@ function liveServer(base) {
 // ===================================================
 // 6. Gulp Tasks
 // ===================================================
-gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild'));
-gulp.task('demo', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', 'demoServer'));
-gulp.task('default', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild', 'styleguideServer'));
+gulp.task('build', gulp.series(clean, frameworkBuild, 'styleguideBuild', 'demoBuild'));
+gulp.task('demo', gulp.series('build', 'demoServer'));
+gulp.task('default', gulp.series('build', 'styleguideServer'));
